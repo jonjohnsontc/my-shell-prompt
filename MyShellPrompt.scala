@@ -36,4 +36,10 @@ object Prompt:
     else
       None
 
+  private def getPythonEnv(path: os.Path = os.pwd): Option[String] = 
+    ???
 
+  private def getJavaEnv(path: os.Path = os.pwd): Option[String] = 
+    ???
+
+  private def getAWSStatus(): Option[String] = ???

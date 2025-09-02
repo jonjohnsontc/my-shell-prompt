@@ -17,14 +17,15 @@ object Prompt:
     else
       localDir = currentDir.toString
 
+    val host = os.proc("hostname").call().out.trim().toLowerCase
+    
     val branch = getGitBranch() 
     if branch.isDefined then
       println(s"${BLUE}${BOLD} On branch ${branch.get} ${RESET}")
 
-    println(s"${GREEN}${BOLD} ❧ JJ @ mac IN ${localDir} ☙ ${RESET}")
+    println(s"${GREEN}${BOLD} ❧ JJ @ ${host} IN ${localDir} ☙ ${RESET}")
     println(s"zsh>> ")
   
-
   private def getGitBranch(path: os.Path = os.pwd): Option[String] = 
     if os.exists(path / ".git") then
       val head = os.read(os.pwd / ".git" / "HEAD").trim

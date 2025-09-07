@@ -9,7 +9,7 @@
 import scala.io.AnsiColor._
 
 object Prompt:
-  
+   
   // Hello! I display the following in separate lines:
   // Current python3 env 
   // Current Git branch
@@ -23,16 +23,20 @@ object Prompt:
       localDir = currentDir.path.last
     else
       localDir = currentDir.path.toString
-    val host = os.proc("hostname").call().out.trim().toLowerCase
+    val host = os.proc("hostname", "-s").call().out.trim().toLowerCase
     
     val prompt = List(
-      PythonEnv.display.map(env =>s"${GREEN}${BOLD}Py env: ${env}${RESET}"),
-      GitBranch.display.map(br => s"${BLUE}${BOLD}On branch ${br} ${RESET}"),
-      LongPath.display.map(lp => s"${MAGENTA}${BOLD}pwd: ${lp}"),
-      Some(s" ❧ JJ @ ${host} IN ${localDir} ☙ ${RESET}"),
-      ShellType.display.map(shell => s"${shell}>> ")
+      PythonEnv.display.map(env => styled(s"Py env: ${env}")),
+      GitBranch.display.map(br => styled(s"On branch ${br}")),
+      Some(styled(s"JJ@${host} in ${localDir}")),
+      LongPath.display.map(lp => styled(s"pwd: ${lp}")),
+      ShellType.display.map(shell => styled(s"Using ${shell}")),
+      Some(s"℁ ")
     ).flatten.mkString("\n")
     println(prompt)
+
+  inline def styled(prompt: String): String = 
+    s"${BOLD}${BLACK_B}${WHITE} ${prompt.padTo(40, ' ')}${RESET}"
 
   // Represents the current working directory
   // Can be passed into all of the Prompt Row objects below by the compiler

@@ -12,7 +12,6 @@ object Prompt:
   
   // Hello! I display the following in separate lines:
   // Current python3 env 
-  // Current Java env
   // Current Git branch
   // file-path to root of git directory
   // User @ Host in current working directory
@@ -29,15 +28,15 @@ object Prompt:
     val prompt = List(
       PythonEnv.display.map(env =>s"${GREEN}${BOLD}Py env: ${env}${RESET}"),
       GitBranch.display.map(br => s"${BLUE}${BOLD}On branch ${br} ${RESET}"),
-      LongPath.display.map(lp => s"${RED}${BOLD}${lp}"),
+      LongPath.display.map(lp => s"${MAGENTA}${BOLD}pwd: ${lp}"),
       Some(s" ❧ JJ @ ${host} IN ${localDir} ☙ ${RESET}"),
-      Some(s"zsh>> ")
+      ShellType.display.map(shell => s"${shell}>> ")
     ).flatten.mkString("\n")
     println(prompt)
-  
+
   // Represents the current working directory
   // Can be passed into all of the Prompt Row objects below by the compiler
-  // TODO: what value does declaring an arg a 'val'
+  // Declaring arg as `val` or `var` defines it as a field
   class WorkingDir(val path: os.Path)
 
   // Single line of a prompt 
@@ -83,6 +82,14 @@ object Prompt:
         Some(s"${pwd.replace(home, homeChar)}")
       else
         Some(pwd)
+
+  object ShellType extends Row:
+    inline def display(using dir: WorkingDir) =
+      val shell = System.getenv("SHELL")
+      if shell != null then
+        Some(shell.split("/").last)
+      else
+        None 
 
   object AWSEnv extends Row:
     inline def display(using dir: WorkingDir) = ???

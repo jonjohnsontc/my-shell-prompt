@@ -36,7 +36,7 @@ object Prompt:
     println(prompt)
 
   inline def styled(prompt: String): String = 
-    s"${BOLD}${BLACK_B}${WHITE} ${prompt.padTo(40, ' ')}${RESET}"
+    s"${BOLD}${MAGENTA_B}${WHITE} ${prompt.padTo(50, ' ')}${RESET}"
 
   // Represents the current working directory
   // Can be passed into all of the Prompt Row objects below by the compiler
@@ -81,11 +81,14 @@ object Prompt:
       val home = System.getenv("HOME")
       val pwd = dir.path.toString
       val homeChar = "~"
-
-      if pwd.startsWith(home) then
-        Some(s"${pwd.replace(home, homeChar)}")
+      
+      if pwd.split("/").length > 5 then
+        if pwd.startsWith(home) then
+          Some(s"${pwd.replace(home, homeChar)}")
+        else
+          Some(pwd)
       else
-        Some(pwd)
+        None
 
   object ShellType extends Row:
     inline def display(using dir: WorkingDir) =
